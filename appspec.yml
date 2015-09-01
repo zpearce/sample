@@ -1,0 +1,60 @@
+version: 0.0
+os: linux
+files:
+  - source: content/
+    destination: /var/www/html/
+#
+# The hooks section of the AppSpec file contains mappings that link
+# deployment lifecycle event hooks to one or more scripts.
+#
+# See http://docs.aws.amazon.com/codedeploy/latest/userguide/app-spec-ref.html#app-spec-ref-hooks
+#
+
+hooks:
+  #
+  # ApplicationStop - this is the first deployment lifecycle event
+  # that occurs even before the application revision gets
+  # downloaded. You can use the ApplicationStop deployment lifecycle
+  # event if you want to gracefully stop the application or remove
+  # currently installed packages in preparation of a deployment.
+  #
+  # The AppSpec file and scripts used for this deployment lifecycle
+  # event are from the last successfully deployed application
+  # revision.
+  #
+  ApplicationStop:
+    - location: scripts/stop_httpd.sh
+      timeout: 120
+  #
+  # BeforeInstall - you can use the BeforeInstall deployment lifecycle
+  # event for preinstall tasks such as decrypting files and creating a
+  # backup of the current version.
+  #
+  BeforeInstall:
+    - location: scripts/rm_site.sh
+      timeout: 120
+
+  #
+  # AfterInstall - you can use the AfterInstall deployment lifecycle
+  # event for tasks such as configuring your application or changing
+  # file permissions.
+  #
+  AfterInstall:
+    - location: scripts/change_perms.sh
+      timeout: 120
+
+  #
+  # ApplicationStart - you typically use the ApplicationStart
+  # deployment lifecycle event to restart services that were stopped
+  # during ApplicationStop.
+  #
+  ApplicationStart:
+    - location: scripts/start_httpd.sh
+      timeout: 120
+  #
+  # ValidateService - ValidateService is the last deployment lifecycle
+  # event and is an opportunity to verify that the deployment
+  # completed successfully.
+  #
+  ValidateService:
+    - location: scripts/validate.sh
