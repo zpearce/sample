@@ -8,7 +8,7 @@ class SampleTest extends PHPUnit_Framework_TestCase {
 
   public function testHelloWorld() {
     $obj = new Sample();
-    $this->assertTrue($obj->helloWorld() == "Hello!");
+    $this->assertTrue($obj->helloWorld() == "Bye bitches!");
   }
 }
 
